@@ -157,7 +157,9 @@ export class SubscriptionService implements Disposable {
 		}
 
 		this.changeSubscription(subscription, undefined, { silent: true });
-		setTimeout(() => void this.ensureSession(false, undefined), 10000);
+		if (!CORPORATE) {
+			setTimeout(() => void this.ensureSession(false, undefined), 10000);
+		}
 
 		if (container.previousVersion != null && satisfies(container.previousVersion, '< 18.0.0')) {
 			void this.container.storage.store(`plus:preview:graph:usages`, undefined);
