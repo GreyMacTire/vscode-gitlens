@@ -56,7 +56,9 @@ export class ConfigCatFeatureFlagService implements FeatureFlagService {
 		this._flags = Object.freeze(this.container.storage.get('featureFlags:flags') ?? {});
 
 		// Fire background fetch to evaluate flags and store them for the NEXT activation
-		void this.fetchAndCacheFlags();
+		if (!CORPORATE) {
+			void this.fetchAndCacheFlags();
+		}
 	}
 
 	dispose(): void {}
