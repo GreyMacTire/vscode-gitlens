@@ -32,6 +32,11 @@ export class OrganizationService implements Disposable {
 	) {
 		this._disposable = Disposable.from(
 			once(container.onReady)(async () => {
+				if (CORPORATE) {
+					void this.updateOrganizationPermissions(undefined);
+					return;
+				}
+
 				// Always resolve org permissions on ready — including no account/org (orgId undefined),
 				// which applies the fallback defaults (AI allowed). Guard the lookup so a failure still
 				// applies those defaults rather than leaving the org context unset (which would gate AI off).
