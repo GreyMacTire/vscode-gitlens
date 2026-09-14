@@ -420,7 +420,7 @@ export class AIProviderService implements AIService, Disposable {
 
 	/** Whether the user has enabled AI features (`gitlens.ai.enabled` setting). */
 	get enabled(): boolean {
-		return configuration.get('ai.enabled', undefined, true);
+		return !CORPORATE && configuration.get('ai.enabled', undefined, true);
 	}
 
 	/** Whether the org permits AI (GitKraken admin setting). Fail-open: defaults true until org settings load. */
