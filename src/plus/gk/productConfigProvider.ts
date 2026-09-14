@@ -102,22 +102,24 @@ export class ProductConfigProvider {
 				} catch {}
 			}
 
-			try {
-				const rsp = await connection.fetchGkConfig('product.json');
-				if (rsp.ok) {
-					data = await rsp.json();
+			if (!CORPORATE) {
+				try {
+					const rsp = await connection.fetchGkConfig('product.json');
+					if (rsp.ok) {
+						data = await rsp.json();
 
-					const config = getConfig(data);
-					if (config != null) return config;
+						const config = getConfig(data);
+						if (config != null) return config;
 
-					failed.validation = true;
-				} else {
-					failed.statusCode = rsp.status;
+						failed.validation = true;
+					} else {
+						failed.statusCode = rsp.status;
+					}
+				} catch (ex) {
+					failed.exception = ex;
+					scope?.error(ex);
+					debugger;
 				}
-			} catch (ex) {
-				failed.exception = ex;
-				scope?.error(ex);
-				debugger;
 			}
 
 			container.telemetry.sendEvent('productConfig/failed', {
