@@ -22,6 +22,7 @@ async function buildTests(target) {
 		bundle: true,
 		define: {
 			DEBUG: 'false',
+			CORPORATE: 'false',
 		},
 		entryPoints: ['src/**/__tests__/**/*.test.ts', 'src/**/__tests__/**/*.benchmark.ts'],
 		entryNames: '[dir]/[name]',

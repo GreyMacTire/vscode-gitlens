@@ -31,6 +31,7 @@ const { DefinePlugin, optimize, WebpackError } = webpack;
 const require = createRequire(import.meta.url);
 
 const debug = Boolean(process.env.DEBUG);
+const corporate = /^(1|true|yes)$/i.test(process.env.CORPORATE_BUILD ?? '');
 const useNpm = Boolean(process.env.GL_USE_NPM);
 if (useNpm) {
 	console.log('Using npm to run scripts');
@@ -218,6 +219,7 @@ function getExtensionConfig(target, mode, env) {
 	const plugins = [
 		new DefinePlugin({
 			DEBUG: debug || mode === 'development',
+			CORPORATE: corporate,
 			'process.env.NODE_ENV': JSON.stringify(mode === 'production' ? 'production' : 'development'),
 		}),
 	];
@@ -576,6 +578,7 @@ function getWebviewConfig(webviews, overrides, mode, env) {
 	const plugins = [
 		new DefinePlugin({
 			DEBUG: debug || mode === 'development',
+			CORPORATE: corporate,
 			'process.env.NODE_ENV': JSON.stringify(mode === 'production' ? 'production' : 'development'),
 		}),
 		new WebpackRequireFromPlugin({ variableName: 'webpackResourceBasePath' }),
