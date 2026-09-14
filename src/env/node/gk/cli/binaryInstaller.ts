@@ -67,6 +67,8 @@ export class CliBinaryInstaller implements Disposable {
 	@sequentialize()
 	@debug({ exit: true })
 	async install(autoInstall?: boolean, source?: Sources, force = false): Promise<CliInstallResult> {
+		if (CORPORATE) return { cliVersion: undefined, cliPath: undefined, status: 'attempted', changed: false };
+
 		const scope = getScopedLogger();
 		clearResolvedCLIExecutableCache();
 
@@ -495,6 +497,8 @@ export class CliBinaryInstaller implements Disposable {
 	 */
 	@debug()
 	async ensureUpdateOrInstall(): Promise<CliInstallResult | undefined> {
+		if (CORPORATE) return undefined;
+
 		if (getDevCLILocalPath() != null) {
 			Logger.info(`${formatLoggableScopeBlock('CLI')} Using local CLI binary — skipping auto-install/update`);
 			void setContext('gitlens:gk:cli:installed', true);
