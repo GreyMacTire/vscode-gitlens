@@ -4524,7 +4524,7 @@
 					"gitlens.ai.enabled": {
 						"type": "boolean",
 						"default": true,
-						"markdownDescription": "Specifies whether to enable GitLens' AI-powered features",
+						"markdownDescription": "Specifies whether to enable GitLens' AI-powered features (Disabled in this build)",
 						"scope": "window",
 						"order": 2,
 						"tags": [
