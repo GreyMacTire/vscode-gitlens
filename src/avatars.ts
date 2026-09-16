@@ -58,6 +58,12 @@ interface Avatar {
 
 const missingGravatarHash = '00000000000000000000000000000000';
 
+const corporatePlaceholderAvatarUri = Uri.parse(
+	`data:image/svg+xml,${encodeURIComponent(
+		'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="5.5" r="3" fill="#808080"/><path d="M8 9.5c-3.2 0-5.5 1.9-5.5 4.3V15h11v-1.2c0-2.4-2.3-4.3-5.5-4.3z" fill="#808080"/></svg>',
+	)}`,
+);
+
 const presenceCache = new Map<ContactPresenceStatus, string>();
 
 const millisecondsPerMinute = 60 * 1000;
@@ -111,6 +117,8 @@ function getAvatarUriCore(
 	repoPathOrCommit: string | { ref: string; repoPath: string } | undefined,
 	options?: { cached?: boolean; defaultStyle?: GravatarDefaultStyle; size?: number },
 ): Uri | Promise<Uri> | undefined {
+	if (CORPORATE) return corporatePlaceholderAvatarUri;
+
 	ensureAvatarCache(avatarCache);
 
 	// Double the size to avoid blurring on the retina screen
@@ -206,6 +214,8 @@ function getAvatarUriFromGravatar(hash: string, size: number, defaultStyle?: Gra
 }
 
 export function getAvatarUriFromGravatarEmail(email: string, size: number, defaultStyle?: GravatarDefaultStyle): Uri {
+	if (CORPORATE) return corporatePlaceholderAvatarUri;
+
 	return getAvatarUriFromGravatar(md5(email.trim().toLowerCase()), size, defaultStyle);
 }
 
@@ -303,6 +313,8 @@ const maxAvatarProxyBytes = 512 * 1024; // 512 KB
 const rasterImageTypes = new Set(['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp']);
 
 export async function fetchAvatarImageAsDataUri(url: string): Promise<Uri | undefined> {
+	if (CORPORATE) return undefined;
+
 	try {
 		if (!url.startsWith('https://')) return undefined;
 
