@@ -1006,6 +1006,10 @@ export class GitProviderService implements UnifiedDisposable {
 			return { allowed: false, subscription: { current: subscription, required: 'pro' } };
 		}
 
+		if (CORPORATE) {
+			return { allowed: true, subscription: { current: subscription } };
+		}
+
 		function getRepoAccess(
 			this: GitProviderService,
 			repoPath: string | Uri,
