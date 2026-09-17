@@ -600,6 +600,9 @@ export class SubscriptionService implements Disposable {
 		signIn?: { code: string; state?: string };
 		context?: TrackingContext;
 	}): Promise<boolean> {
+		// Corporate builds never allow signing in to a GitKraken account (silently do nothing)
+		if (CORPORATE) return false;
+
 		// Abort any waiting authentication to ensure we can start a new flow
 		await this.container.accountAuthentication.abort();
 		void this.showAccountView();
@@ -1201,6 +1204,10 @@ export class SubscriptionService implements Disposable {
 			context?: TrackingContext;
 		},
 	): Promise<AuthenticationSession | undefined> {
+		// Corporate builds never allow obtaining a GitKraken account session (blocks login,
+		// loading of any stored session, and all server check-ins)
+		if (CORPORATE) return undefined;
+
 		if (this._sessionPromise != null) {
 			void (await this._sessionPromise);
 		}
@@ -1352,6 +1359,11 @@ export class SubscriptionService implements Disposable {
 		source: Source | undefined,
 		options?: { silent?: boolean; store?: boolean },
 	): void {
+		// Corporate builds never allow any plan beyond Community (Pro/trial can never be activated)
+		if (CORPORATE) {
+			subscription = undefined;
+		}
+
 		subscription ??= {
 			plan: {
 				actual: getSubscriptionPlan('community', false, 0, undefined),
